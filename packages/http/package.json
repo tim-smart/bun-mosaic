@@ -1,0 +1,17 @@
+{
+  "name": "@app/http",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "description": "",
+  "scripts": {
+    "dev": "bun run --watch ./src/main.ts"
+  },
+  "dependencies": {
+    "@app/core": "workspace:^",
+    "@effect/platform-bun": "^0.15.4",
+    "effect": "2.0.0-next.52"
+  }
+}
