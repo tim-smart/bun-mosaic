@@ -18,12 +18,13 @@ const Server = Http.server.layer(createServer, {
 const WorkerLive = ImageWorkerLive(
   () =>
     new WT.Worker(new URL("../image/Worker/server.node.ts", import.meta.url)),
-).pipe(Layer.use(Worker.layerManager))
+)
 
 const MainLive = HttpLive.pipe(
   Layer.use(Server),
   Layer.use(WorkerLive),
   Layer.use(NodeContext.layer),
+  Layer.use(Worker.layerManager),
   Layer.use(Layer.succeed(ImageDirectory, process.argv[2])),
   Layer.use(Layer.succeed(WatchDirectory, process.argv[3])),
 )

@@ -18,12 +18,13 @@ const WorkerLive = ImageWorkerLive(
     new globalThis.Worker(
       new URL("../image/Worker/server.bun.ts", import.meta.url),
     ),
-).pipe(Layer.use(Worker.layerManager))
+)
 
 const MainLive = HttpLive.pipe(
   Layer.use(Server),
   Layer.use(WorkerLive),
   Layer.use(BunContext.layer),
+  Layer.use(Worker.layerManager),
   Layer.use(Layer.succeed(ImageDirectory, process.argv[2])),
   Layer.use(Layer.succeed(WatchDirectory, process.argv[3])),
 )

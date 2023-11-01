@@ -9,10 +9,10 @@
   "dependencies": {
     "@app/image": "workspace:^",
     "@app/watcher": "workspace:^",
-    "@effect/platform": "^0.26.4",
-    "@effect/platform-bun": "^0.15.4",
-    "@effect/platform-node": "^0.27.6",
-    "@effect/rpc-workers": "^0.16.4",
+    "@effect/platform": "^0.26.6",
+    "@effect/platform-bun": "^0.15.8",
+    "@effect/platform-node": "^0.27.8",
+    "@effect/rpc-workers": "^0.16.6",
     "@effect/schema": "^0.46.3",
     "effect": "2.0.0-next.52",
     "ts-node": "^10.9.1"

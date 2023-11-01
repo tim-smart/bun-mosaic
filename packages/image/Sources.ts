@@ -1,4 +1,4 @@
-import { ImageWorker } from "@app/image/Worker/schema"
+import * as Worker from "@app/image/Worker/schema"
 import { concurrency } from "@app/image/utils"
 import { FileSystem, Path } from "@effect/platform"
 import { Schema } from "@effect/schema"
@@ -8,7 +8,6 @@ const make = (directory: string) =>
   Effect.gen(function* (_) {
     const fs = yield* _(FileSystem.FileSystem)
     const path = yield* _(Path.Path)
-    const worker = yield* _(ImageWorker)
 
     yield* _(Effect.log("loading images"))
     const images = (yield* _(fs.readDirectory(directory)))
@@ -17,17 +16,26 @@ const make = (directory: string) =>
 
     yield* _(Effect.log("calculating colors"))
     const colors = yield* _(
-      Effect.forEach(
-        images,
-        image =>
-          worker
-            .getColor(image)
-            .pipe(Effect.zipLeft(Effect.sync(() => process.stdout.write(".")))),
-        { concurrency: "unbounded" },
-      ),
+      Effect.gen(function* (_) {
+        const worker = yield* _(Worker.client([], 10))
+        return yield* _(
+          Effect.forEach(
+            images,
+            image =>
+              worker
+                .getColor(image)
+                .pipe(
+                  Effect.zipLeft(Effect.sync(() => process.stdout.write("."))),
+                ),
+            { concurrency: "unbounded" },
+          ),
+        )
+      }).pipe(Effect.scoped),
     )
 
     yield* _(Effect.log("sources ready"))
+
+    const worker = yield* _(Worker.client(colors, 2))
 
     const getClosestGrid = ({
       path,
@@ -40,7 +48,6 @@ const make = (directory: string) =>
         Stream.mapEffect(
           shard =>
             worker.getTiles({
-              sources: colors,
               path,
               columns,
               shard,
@@ -83,7 +90,7 @@ export const Sources = Context.Tag<
 
 export const SourcesLive = ImageDirectory.pipe(
   Effect.flatMap(make),
-  Layer.effect(Sources),
+  Layer.scoped(Sources),
 )
 
 export class ImageTile extends Schema.Class<ImageTile>()({

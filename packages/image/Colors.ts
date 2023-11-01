@@ -98,38 +98,7 @@ const make = Effect.gen(function* (_) {
       )
     }).pipe(Stream.unwrap)
 
-  const closest = (sources: ReadonlyArray<RGB>, target: RGB, index = 0) => {
-    const order = Order.make((a: RGB, b: RGB) => {
-      const distanceA = a.distance(target)
-      const distanceB = b.distance(target)
-      return distanceA < distanceB ? -1 : distanceA > distanceB ? 1 : 0
-    })
-    const item = ReadonlyArray.sort(sources, order)[index]
-    return sources.indexOf(item)
-  }
-
-  const getClosestGrid = (options: {
-    readonly sources: ReadonlyArray<RGB>
-    readonly path: string
-    readonly columns: number
-    readonly shard?: number
-    readonly totalShards?: number
-  }) =>
-    Stream.suspend(() => {
-      let count = 0
-      return colorGrid(options).pipe(
-        Stream.map(
-          target =>
-            new IndexTile({
-              index: closest(options.sources, target.rgb, count++ % 20),
-              x: target.x,
-              y: target.y,
-            }),
-        ),
-      )
-    })
-
-  return { color, colorGrid, closest, getClosestGrid } as const
+  return { color, colorGrid } as const
 })
 
 export interface Colors {
@@ -158,12 +127,6 @@ export class RGB extends Schema.Class<RGB>()({
 
 export class RGBTile extends Schema.Class<RGBTile>()({
   rgb: RGB,
-  x: Schema.Int,
-  y: Schema.Int,
-}) {}
-
-export class IndexTile extends Schema.Class<IndexTile>()({
-  index: Schema.Int,
   x: Schema.Int,
   y: Schema.Int,
 }) {}

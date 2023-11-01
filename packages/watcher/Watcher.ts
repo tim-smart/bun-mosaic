@@ -32,7 +32,7 @@ const make = (directory: string) =>
         path =>
           sources.getClosestGrid({
             path,
-            columns: 75,
+            columns: 100,
           }),
         { switch: true },
       ),

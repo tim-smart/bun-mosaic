@@ -20,8 +20,8 @@ const make = (url: URL) =>
       .fetchOk()
       .pipe(Http.client.mapRequest(Http.request.prependUrl(baseUrl)))
 
-    const grid = Array.from({ length: 75 }, () =>
-      Array.from({ length: 75 }, () =>
+    const grid = Array.from({ length: 100 }, () =>
+      Array.from({ length: 100 }, () =>
         RxRef.make<undefined | string>(undefined),
       ),
     )
