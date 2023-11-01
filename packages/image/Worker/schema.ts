@@ -34,7 +34,7 @@ const client = (spawn: () => unknown) =>
       Resolver.makePool({
         spawn,
         size: concurrency,
-        // permits: 5,
+        permits: 3,
       }),
     )
     return Client.makeFromPool(schema, pool)

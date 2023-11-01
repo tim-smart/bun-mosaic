@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "run:ui",
+      "problemMatcher": [],
+      "label": "npm: run:ui",
+      "detail": "cd packages/ui && bun dev"
+    },
+    {
+      "type": "npm",
+      "script": "run:bun",
+      "problemMatcher": [],
+      "label": "npm: run:bun",
+      "detail": "bun run packages/http/main.bun.ts ./images ./watch"
+    },
+    {
+      "type": "npm",
+      "script": "run:node",
+      "problemMatcher": [],
+      "label": "npm: run:node",
+      "detail": "node --loader=ts-node/esm packages/http/main.node.ts ./images ./watch"
+    },
+    {
+      "label": "run all",
+      "dependsOn": ["npm: run:ui", "npm: run:bun", "npm: run:node"],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -66,6 +66,13 @@ const make = (directory: string) =>
     Effect.annotateSpans("directory", directory),
   )
 
+export interface ImageDirectory {
+  readonly _: unique symbol
+}
+export const ImageDirectory = Context.Tag<ImageDirectory, string>(
+  "@app/image/ImageDirectory",
+)
+
 export interface Sources {
   readonly _: unique symbol
 }
@@ -74,8 +81,10 @@ export const Sources = Context.Tag<
   Effect.Effect.Success<ReturnType<typeof make>>
 >("@app/image/Sources")
 
-export const SourcesLive = (directory: string) =>
-  Layer.effect(Sources, make(directory))
+export const SourcesLive = ImageDirectory.pipe(
+  Effect.flatMap(make),
+  Layer.effect(Sources),
+)
 
 export class ImageTile extends Schema.Class<ImageTile>()({
   path: Schema.string,

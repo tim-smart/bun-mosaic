@@ -1,14 +1,15 @@
+import { ImageDirectory } from "@app/image/Sources"
+import { ImageWorkerLive } from "@app/image/Worker/schema"
+import { WatchDirectory } from "@app/watcher/Watcher"
+import * as BunContext from "@effect/platform-bun/BunContext"
 import * as Http from "@effect/platform-bun/HttpServer"
 import { runMain } from "@effect/platform-bun/Runtime"
-import * as BunContext from "@effect/platform-bun/BunContext"
 import * as Worker from "@effect/platform-bun/Worker"
 import { Effect, Layer } from "effect"
-import { ImageDirectory, app } from "./Http.ts"
-import { ImageWorkerLive } from "@app/image/Worker/schema"
-import { SourcesLive } from "@app/image/Sources"
-import { WatcherLive } from "@app/watcher/Watcher"
+import { HttpLive } from "./Http.ts"
 
 const Server = Http.server.layer({
+  hostname: "0.0.0.0",
   port: 3000,
 })
 
@@ -19,23 +20,16 @@ const WorkerLive = ImageWorkerLive(
     ),
 ).pipe(Layer.use(Worker.layerManager))
 
-const Sources = SourcesLive(process.argv[2]).pipe(
+const MainLive = HttpLive.pipe(
+  Layer.use(Server),
   Layer.use(WorkerLive),
   Layer.use(BunContext.layer),
+  Layer.use(Layer.succeed(ImageDirectory, process.argv[2])),
+  Layer.use(Layer.succeed(WatchDirectory, process.argv[3])),
 )
-
-const Watcher = WatcherLive(process.argv[3]).pipe(
-  Layer.use(Sources),
-  Layer.use(BunContext.layer),
-)
-
-const MainLive = Layer.mergeAll(Server, BunContext.layer, Sources, Watcher)
 
 Effect.log("listening on http://localhost:3000").pipe(
-  Effect.zipRight(Http.server.serve(app, Http.middleware.logger)),
-  Effect.scoped,
-  Effect.provideService(ImageDirectory, process.argv[2]),
-  Effect.provide(MainLive),
+  Effect.zipRight(Layer.launch(MainLive)),
   Effect.tapErrorCause(Effect.logError),
   runMain,
 )

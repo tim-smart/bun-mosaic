@@ -1,6 +1,6 @@
 import * as Fs from "node:fs"
 import { Context, Effect, Layer, PubSub, Scope, Stream } from "effect"
-import { ImageTile, Sources } from "@app/image/Sources"
+import { ImageTile, Sources, SourcesLive } from "@app/image/Sources"
 import { FileSystem, Path } from "@effect/platform"
 
 const make = (directory: string) =>
@@ -32,7 +32,7 @@ const make = (directory: string) =>
         path =>
           sources.getClosestGrid({
             path,
-            columns: 100,
+            columns: 75,
           }),
         { switch: true },
       ),
@@ -46,6 +46,13 @@ const make = (directory: string) =>
     return { stream } as const
   })
 
+export interface WatchDirectory {
+  readonly _: unique symbol
+}
+export const WatchDirectory = Context.Tag<WatchDirectory, string>(
+  "@app/watcher/WatchDirectory",
+)
+
 export interface Watcher {
   readonly _: unique symbol
 }
@@ -54,5 +61,7 @@ export const Watcher = Context.Tag<
   Effect.Effect.Success<ReturnType<typeof make>>
 >("@app/watcher/Watcher")
 
-export const WatcherLive = (directory: string) =>
-  Layer.scoped(Watcher, make(directory))
+export const WatcherLive = WatchDirectory.pipe(
+  Effect.flatMap(make),
+  Layer.scoped(Watcher),
+).pipe(Layer.use(SourcesLive))
