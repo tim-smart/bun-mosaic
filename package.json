@@ -6,7 +6,9 @@
     "packages/*"
   ],
   "scripts": {
-    "bun": "bun run packages/http/main.bun.ts"
+    "run:bun": "bun run packages/http/main.bun.ts ./images ./watch",
+    "run:node": "node --loader=ts-node/esm packages/http/main.node.ts ./images ./watch",
+    "run:ui": "cd packages/ui && bun dev"
   },
   "devDependencies": {
     "bun-types": "^1.0.7",

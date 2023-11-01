@@ -1,21 +1,36 @@
-.grid {
+.grids {
     display: flex;
-    flex-wrap: wrap;
     height: 100vh;
     overflow: hidden;
     position: relative;
     width: 100vw;
 }
 
+.grid {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.grid-label {
+    margin: 0;
+    padding: 0.5em;
+    text-align: center;
+    width: 100%;
+}
+
+.grid-content {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
 .grid-cell {
+    background-position: center;
+    background-size: cover;
     display: block;
     height: 1%;
     width: 1%;
-}
-
-.grid-cell img {
-    display: block;
-    height: 100%;
-    object-fit: cover;
-    width: 100%;
 }

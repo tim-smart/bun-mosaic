@@ -1,12 +1,4 @@
-import {
-  Context,
-  Data,
-  Effect,
-  Layer,
-  Order,
-  ReadonlyArray,
-  Stream,
-} from "effect"
+import { Context, Effect, Layer, Order, ReadonlyArray, Stream } from "effect"
 import Jimp from "jimp"
 import { Schema } from "@effect/schema"
 
@@ -66,12 +58,14 @@ const make = Effect.gen(function* (_) {
   const colorGrid = ({
     path,
     columns,
+    rows = columns,
     ratio = 1,
     shard = 0,
     totalShards = 1,
   }: {
     readonly path: string
     readonly columns: number
+    readonly rows?: number
     readonly shard?: number
     readonly totalShards?: number
     readonly ratio?: number
@@ -82,8 +76,7 @@ const make = Effect.gen(function* (_) {
       const width = image.bitmap.width
 
       const columnWidth = Math.floor(width / columns)
-      const rowHeight = Math.floor(columnWidth * ratio)
-      const rows = Math.floor(height / rowHeight)
+      const rowHeight = Math.floor(height / rows)
 
       const startRow = Math.round((rows / totalShards) * shard)
       const endRow = Math.round((rows / totalShards) * (shard + 1))
@@ -128,7 +121,7 @@ const make = Effect.gen(function* (_) {
         Stream.map(
           target =>
             new IndexTile({
-              index: closest(options.sources, target.rgb, count++ % 7),
+              index: closest(options.sources, target.rgb, count++ % 20),
               x: target.x,
               y: target.y,
             }),

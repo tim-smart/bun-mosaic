@@ -1,8 +1,8 @@
 import { ImageWorker } from "@app/image/Worker/schema"
+import { concurrency } from "@app/image/utils"
 import { FileSystem, Path } from "@effect/platform"
 import { Schema } from "@effect/schema"
 import { Context, Effect, Layer, Stream } from "effect"
-import * as OS from "node:os"
 
 const make = (directory: string) =>
   Effect.gen(function* (_) {
@@ -46,7 +46,7 @@ const make = (directory: string) =>
               shard,
               totalShards: columns,
             }),
-          { concurrency: OS.cpus().length },
+          { concurrency },
         ),
         Stream.flatMap(Stream.fromChunk),
         Stream.map(

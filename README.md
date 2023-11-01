@@ -9,5 +9,9 @@ pnpm install
 To run:
 
 ```bash
-bun run --watch packages/http/src/main.ts
+pnpm run:ui
+pnpm run:bun
+pnpm run:node
 ```
+
+Then drop images into the watch/ directory.

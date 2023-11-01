@@ -1,11 +1,10 @@
-import { ColorError, IndexTile, RGB, RGBTile } from "../Colors.ts"
+import { ColorError, IndexTile, RGB } from "../Colors.ts"
 import * as RS from "@effect/rpc-workers/Schema"
 import * as Client from "@effect/rpc-workers/Client"
 import * as Resolver from "@effect/rpc-workers/Resolver"
 import { Schema } from "@effect/schema"
 import { Context, Effect, Layer } from "effect"
-import * as OS from "node:os"
-import { spawn } from "bun"
+import { concurrency } from "@app/image/utils"
 
 export const schema = RS.make({
   getColor: {
@@ -34,8 +33,8 @@ const client = (spawn: () => unknown) =>
     const pool = yield* _(
       Resolver.makePool({
         spawn,
-        size: OS.cpus().length,
-        permits: 5,
+        size: concurrency,
+        // permits: 5,
       }),
     )
     return Client.makeFromPool(schema, pool)
