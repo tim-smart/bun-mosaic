@@ -1,0 +1,26 @@
+{
+  "name": "@app/image",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "exports": {
+    "./*": "./*.ts"
+  },
+  "scripts": {},
+  "dependencies": {
+    "@effect/platform": "^0.26.4",
+    "@effect/platform-bun": "^0.15.6",
+    "@effect/platform-node": "^0.27.6",
+    "@effect/rpc-workers": "^0.16.4",
+    "@effect/schema": "^0.46.3",
+    "@sqlfx/sqlite": "^0.29.1",
+    "colorjs.io": "^0.4.5",
+    "effect": "2.0.0-next.52",
+    "jimp": "^0.22.10",
+    "sharp": "^0.32.6"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "tsx": "^3.14.0"
+  }
+}

@@ -1,18 +1,16 @@
 {
-  "name": "@app/http",
+  "name": "@app/watcher",
   "version": "1.0.0",
   "type": "module",
+  "description": "",
   "exports": {
     "./*": "./*.ts"
   },
-  "description": "",
+  "scripts": {},
   "dependencies": {
     "@app/image": "workspace:^",
-    "@app/watcher": "workspace:^",
     "@effect/platform": "^0.26.4",
-    "@effect/platform-bun": "^0.15.4",
-    "@effect/rpc-workers": "^0.16.4",
-    "@effect/schema": "^0.46.3",
     "effect": "2.0.0-next.52"
-  }
+  },
+  "devDependencies": {}
 }

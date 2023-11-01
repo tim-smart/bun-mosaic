@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "lib": ["ESNext"],
-    "module": "esnext",
+    "module": "ESNext",
     "target": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "composite": true,
+    "declaration": false,
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "downlevelIteration": true,
@@ -16,6 +16,16 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": ["bun-types"]
+    "types": ["bun-types"],
+    "paths": {
+      "@app/http/*": ["./packages/http/src/*.ts"],
+      "@app/image/*": ["./packages/image/*.ts"],
+      "@app/watcher/*": ["./packages/watcher/*.ts"]
+    }
+  },
+
+  "ts-node": {
+    "esm": true,
+    "files": true
   }
 }

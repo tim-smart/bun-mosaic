@@ -1,0 +1,21 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    width: 100vw;
+}
+
+.grid-cell {
+    display: block;
+    height: 1%;
+    width: 1%;
+}
+
+.grid-cell img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
