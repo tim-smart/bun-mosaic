@@ -8,11 +8,11 @@
   },
   "scripts": {},
   "dependencies": {
-    "@effect/platform": "^0.26.6",
-    "@effect/platform-bun": "^0.15.8",
-    "@effect/platform-node": "^0.27.8",
+    "@effect/platform": "^0.26.7",
+    "@effect/platform-bun": "^0.15.9",
+    "@effect/platform-node": "^0.27.9",
     "@effect/rpc-workers": "^0.16.6",
-    "@effect/schema": "^0.46.3",
+    "@effect/schema": "^0.46.4",
     "effect": "2.0.0-next.52",
     "jimp": "^0.22.10",
     "sharp": "^0.32.6"

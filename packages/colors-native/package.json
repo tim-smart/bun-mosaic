@@ -10,7 +10,6 @@
     "build": "cargo-cp-artifact -nc index.node -- cargo build --message-format=json-render-diagnostics",
     "build-debug": "pnpm run build",
     "build-release": "pnpm run build --release",
-    "install": "pnpm run build-release",
     "test": "cargo test"
   },
   "author": "",
