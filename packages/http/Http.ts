@@ -37,12 +37,10 @@ const imageParams = Http.router.schemaParams(
   }),
 )
 
-const serveImage = Effect.gen(function* (_) {
-  const path = yield* _(Path.Path)
-  const directory = yield* _(Sources.ImageDirectory)
-  const { image } = yield* _(imageParams)
-  return yield* _(Http.response.file(path.join(directory, image)))
-}).pipe(Http.middleware.withLoggerDisabled)
+const serveImage = Effect.flatMap(
+  Effect.zip(imageParams, Sources.ImageDirectory),
+  ([{ image }, directory]) => Http.response.file(`${directory}/${image}`),
+)
 
 const serve = Http.router.empty.pipe(
   Http.router.get("/ping", Effect.succeed(Http.response.text("pong"))),
@@ -55,7 +53,7 @@ const serve = Http.router.empty.pipe(
 
   Effect.map(Http.response.setHeader("Access-Control-Allow-Origin", "*")),
 
-  Server.serve(Http.middleware.logger),
+  Server.serve(),
 )
 
 export const HttpLive = Layer.scopedDiscard(serve).pipe(Layer.use(WatcherLive))
