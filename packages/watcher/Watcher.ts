@@ -1,5 +1,14 @@
 import * as Fs from "node:fs"
-import { Chunk, Context, Effect, Layer, PubSub, Scope, Stream } from "effect"
+import {
+  Chunk,
+  Context,
+  Effect,
+  Layer,
+  PubSub,
+  Schedule,
+  Scope,
+  Stream,
+} from "effect"
 import { ImageTile, Sources, SourcesLive } from "@app/image/Sources"
 import { FileSystem, Path } from "@effect/platform"
 
@@ -25,6 +34,12 @@ const make = (directory: string) =>
       Stream.map(_ => path.join(directory, _)),
       Stream.filterEffect(fs.exists),
       Stream.filter(_ => /\.(jpg|jpeg|png)$/.test(_)),
+      Stream.tap(() => {
+        const now = Date.now()
+        const nextSecond = (Math.ceil(now / 1000) + 1) * 1000
+        const delay = nextSecond - now
+        return Effect.sleep(delay)
+      }),
       Stream.tap(_ =>
         Effect.log("watcher processing").pipe(Effect.annotateLogs("image", _)),
       ),

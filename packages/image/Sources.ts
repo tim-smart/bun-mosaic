@@ -1,4 +1,3 @@
-import { IndexTile } from "@app/image/Distance"
 import * as Worker from "@app/image/Worker/schema"
 import { concurrency } from "@app/image/utils"
 import { FileSystem, KeyValueStore, Path } from "@effect/platform"

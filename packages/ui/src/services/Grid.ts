@@ -9,7 +9,7 @@ export class ImageTile extends Schema.Class<ImageTile>()({
   y: Schema.number,
 }) {}
 
-const parseTile = Schema.compose(
+const parseTiles = Schema.compose(
   Schema.ParseJson,
   Schema.chunk(ImageTile),
 ).pipe(Schema.decode)
@@ -33,8 +33,8 @@ const make = (url: URL) =>
       Stream.unwrap,
       Stream.decodeText(),
       Stream.splitLines,
-      Stream.mapEffect(parseTile),
-      Stream.flatMap(Stream.fromChunk),
+      Stream.mapEffect(parseTiles),
+      Stream.flattenChunks,
       Stream.tap(tile =>
         Effect.sync(() => {
           grid[tile.y]?.[tile.x]?.set(baseUrl + tile.path)
