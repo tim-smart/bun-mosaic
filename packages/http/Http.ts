@@ -4,11 +4,12 @@ import { Path } from "@effect/platform"
 import * as Server from "@effect/platform/Http/Server"
 import * as Http from "@effect/platform/HttpServer"
 import { Schema } from "@effect/schema"
-import { Effect, Layer, Stream } from "effect"
+import { Chunk, Effect, Layer, Stream } from "effect"
 
-const encodeTile = Schema.compose(Schema.ParseJson, Sources.ImageTile).pipe(
-  Schema.encode,
-)
+const encodeTile = Schema.compose(
+  Schema.ParseJson,
+  Schema.chunk(Sources.ImageTile),
+).pipe(Schema.encode)
 
 const streamHandler = Effect.gen(function* (_) {
   const watcher = yield* _(Watcher)
@@ -24,8 +25,9 @@ const streamHandler = Effect.gen(function* (_) {
             y: tile.y,
           }),
       ),
+      Stream.chunks,
       Stream.mapEffect(encodeTile),
-      Stream.intersperse("\r\n"),
+      Stream.map(_ => _ + "\r\n"),
       Stream.encodeText,
     ),
   )

@@ -1,13 +1,16 @@
+import { IndexTile } from "@app/image/Distance"
 import * as Worker from "@app/image/Worker/schema"
 import { concurrency } from "@app/image/utils"
-import { FileSystem, Path } from "@effect/platform"
+import { FileSystem, KeyValueStore, Path } from "@effect/platform"
 import { Schema } from "@effect/schema"
-import { Context, Effect, Layer, Stream } from "effect"
+import { Chunk, Context, Effect, Layer, Stream } from "effect"
+import * as Crypto from "node:crypto"
 
 const make = (directory: string) =>
   Effect.gen(function* (_) {
     const fs = yield* _(FileSystem.FileSystem)
     const path = yield* _(Path.Path)
+    const cache = yield* _(Cache.tag)
 
     yield* _(Effect.log("loading images"))
     const images = (yield* _(fs.readDirectory(directory)))
@@ -33,9 +36,47 @@ const make = (directory: string) =>
       }).pipe(Effect.scoped),
     )
 
+    const worker = yield* _(Worker.client(colors, 2))
+
     yield* _(Effect.log("sources ready"))
 
-    const worker = yield* _(Worker.client(colors, 2))
+    const fileHash = yield* _(
+      Effect.cachedFunction((path: string) =>
+        Effect.flatMap(fs.readFile(path), buffer =>
+          Effect.sync(() =>
+            Crypto.createHash("sha1").update(buffer).digest("hex"),
+          ),
+        ),
+      ),
+    )
+
+    const cacheKey = (path: string, columns: number, row: number) =>
+      Effect.map(fileHash(path), hash => `${hash}-${columns}-${row}`)
+
+    const getTiles = (path: string, columns: number, row: number) =>
+      Effect.gen(function* (_) {
+        const key = yield* _(cacheKey(path, columns, row))
+        const cached = yield* _(cache.get(key))
+        if (cached._tag === "Some") {
+          return cached.value
+        }
+
+        const tiles = yield* _(
+          worker.getTiles({ path, columns, shard: row, totalShards: columns }),
+          Effect.map(
+            Chunk.map(
+              tile =>
+                new ImageTile({
+                  path: images[tile.index],
+                  x: tile.x,
+                  y: tile.y,
+                }),
+            ),
+          ),
+        )
+        yield* _(cache.set(key, tiles))
+        return tiles
+      })
 
     const getClosestGrid = ({
       path,
@@ -45,32 +86,14 @@ const make = (directory: string) =>
       readonly columns: number
     }) =>
       Stream.range(0, columns - 1).pipe(
-        Stream.mapEffect(
-          shard =>
-            worker.getTiles({
-              path,
-              columns,
-              shard,
-              totalShards: columns,
-            }),
-          { concurrency },
-        ),
-        Stream.flatMap(Stream.fromChunk),
-        Stream.map(
-          tile =>
-            new ImageTile({
-              path: images[tile.index],
-              x: tile.x,
-              y: tile.y,
-            }),
-        ),
+        Stream.mapEffect(row => getTiles(path, columns, row), { concurrency }),
+        Stream.flattenChunks,
       )
 
     return { getClosestGrid } as const
   }).pipe(
     Effect.withLogSpan("Sources.make"),
     Effect.annotateLogs("directory", directory),
-    Effect.annotateSpans("directory", directory),
   )
 
 export interface ImageDirectory {
@@ -78,6 +101,17 @@ export interface ImageDirectory {
 }
 export const ImageDirectory = Context.Tag<ImageDirectory, string>(
   "@app/image/ImageDirectory",
+)
+
+export class ImageTile extends Schema.Class<ImageTile>()({
+  path: Schema.string,
+  x: Schema.number,
+  y: Schema.number,
+}) {}
+
+export const Cache = KeyValueStore.layerSchema(
+  Schema.chunk(ImageTile),
+  "@app/image/Sources/Cache",
 )
 
 export interface Sources {
@@ -91,10 +125,5 @@ export const Sources = Context.Tag<
 export const SourcesLive = ImageDirectory.pipe(
   Effect.flatMap(make),
   Layer.scoped(Sources),
+  Layer.use(Cache.layer),
 )
-
-export class ImageTile extends Schema.Class<ImageTile>()({
-  path: Schema.string,
-  x: Schema.number,
-  y: Schema.number,
-}) {}

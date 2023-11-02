@@ -1,14 +1,15 @@
+import { HttpLive } from "@app/http/Http"
 import { ImageDirectory } from "@app/image/Sources"
 import { ImageWorkerLive } from "@app/image/Worker/schema"
 import { WatchDirectory } from "@app/watcher/Watcher"
 import * as Http from "@effect/platform-node/HttpServer"
+import * as KVS from "@effect/platform-node/KeyValueStore"
 import * as NodeContext from "@effect/platform-node/NodeContext"
 import { runMain } from "@effect/platform-node/Runtime"
 import * as Worker from "@effect/platform-node/Worker"
 import { Effect, Layer } from "effect"
 import { createServer } from "node:http"
 import * as WT from "node:worker_threads"
-import { HttpLive } from "@app/http/Http"
 
 const Server = Http.server.layer(createServer, {
   host: "0.0.0.0",
@@ -23,6 +24,7 @@ const WorkerLive = ImageWorkerLive(
 const MainLive = HttpLive.pipe(
   Layer.use(Server),
   Layer.use(WorkerLive),
+  Layer.use(KVS.layerFileSystem(`${process.argv[3]}/_cache`)),
   Layer.use(NodeContext.layer),
   Layer.use(Worker.layerManager),
   Layer.use(Layer.succeed(ImageDirectory, process.argv[2])),

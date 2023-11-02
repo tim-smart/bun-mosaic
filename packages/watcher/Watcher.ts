@@ -1,11 +1,11 @@
 import * as Fs from "node:fs"
-import { Context, Effect, Layer, PubSub, Scope, Stream } from "effect"
+import { Chunk, Context, Effect, Layer, PubSub, Scope, Stream } from "effect"
 import { ImageTile, Sources, SourcesLive } from "@app/image/Sources"
 import { FileSystem, Path } from "@effect/platform"
 
 const make = (directory: string) =>
   Effect.gen(function* (_) {
-    const hub = yield* _(PubSub.unbounded<ImageTile>())
+    const hub = yield* _(PubSub.unbounded<Chunk.Chunk<ImageTile>>())
     const sources = yield* _(Sources)
     const fs = yield* _(FileSystem.FileSystem)
     const path = yield* _(Path.Path)
@@ -36,12 +36,13 @@ const make = (directory: string) =>
           }),
         { switch: true },
       ),
-      Stream.tap(tile => PubSub.publish(hub, tile)),
+      Stream.chunks,
+      Stream.tap(_ => PubSub.publish(hub, _)),
     )
 
     yield* _(Stream.runDrain(tileStream), Effect.forkScoped)
 
-    const stream = Stream.fromPubSub(hub)
+    const stream = Stream.fromPubSub(hub).pipe(Stream.flattenChunks)
 
     return { stream } as const
   })
