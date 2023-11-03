@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@effect-rx/rx-react": "^0.11.1",
-    "@effect/platform-browser": "^0.15.1",
+    "@effect/platform-browser": "^0.15.2",
     "@effect/schema": "^0.47.1",
     "effect": "2.0.0-next.54",
     "react": "^18.2.0",

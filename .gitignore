@@ -9,3 +9,4 @@ node_modules/
 .env.local
 dist
 watch/*
+.DS_Store

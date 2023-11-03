@@ -14,14 +14,14 @@ const make = (sources: ReadonlyArray<RGB>) =>
   Effect.gen(function* (_) {
     const colors = yield* _(Colors)
 
+    const sourcesForSort = [...sources]
     const closest = (target: RGB, index = 0) => {
       const order = Order.make((a: RGB, b: RGB) => {
         const distanceA = a.distance(target)
         const distanceB = b.distance(target)
         return distanceA < distanceB ? -1 : distanceA > distanceB ? 1 : 0
       })
-      const item = ReadonlyArray.sort(sources, order)[index]
-      return sources.indexOf(item)
+      return sources.indexOf(sourcesForSort.sort(order)[index])
     }
 
     const getClosestGrid = (options: {

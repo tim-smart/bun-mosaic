@@ -8,9 +8,9 @@
   },
   "scripts": {},
   "dependencies": {
-    "@effect/platform": "^0.27.1",
-    "@effect/platform-bun": "^0.16.1",
-    "@effect/platform-node": "^0.28.1",
+    "@effect/platform": "^0.27.2",
+    "@effect/platform-bun": "^0.16.2",
+    "@effect/platform-node": "^0.28.2",
     "@effect/rpc-workers": "^0.17.1",
     "@effect/schema": "^0.47.1",
     "effect": "2.0.0-next.54",

@@ -1,7 +1,6 @@
 .grids {
   display: flex;
   height: 100vh;
-  overflow: hidden;
   position: relative;
   width: 100vw;
 }
@@ -13,6 +12,7 @@
 }
 
 .grid-label {
+  box-sizing: border-box;
   margin: 0;
   padding: 0.5em;
   text-align: center;
@@ -20,13 +20,16 @@
 }
 
 .grid-content {
+  display: grid;
   flex: 1;
-  line-height: 0;
-  position: relative;
+  grid-template-columns: repeat(100, 1fr);
+  grid-template-rows: repeat(100, 1fr);
+  overflow: hidden;
 }
 
 .grid-cell {
-  display: inline-block;
-  height: 1%;
-  width: 1%;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
 }
