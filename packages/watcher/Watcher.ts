@@ -57,7 +57,7 @@ const make = (directory: string) =>
 
     yield* _(Stream.runDrain(tileStream), Effect.forkScoped)
 
-    const stream = Stream.fromPubSub(hub).pipe(Stream.flattenChunks)
+    const stream = Stream.fromChunkPubSub(hub)
 
     return { stream } as const
   })

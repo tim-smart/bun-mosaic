@@ -1,7 +1,7 @@
 import { Rx, RxRef } from "@effect-rx/rx-react"
 import * as Http from "@effect/platform-browser/HttpClient"
 import * as Schema from "@effect/schema/Schema"
-import { Effect, Schedule, Stream } from "effect"
+import { Chunk, Effect, Schedule, Stream } from "effect"
 
 export class ImageTile extends Schema.Class<ImageTile>()({
   path: Schema.string,
@@ -34,10 +34,12 @@ const make = (url: URL) =>
       Stream.decodeText(),
       Stream.splitLines,
       Stream.mapEffect(parseTiles),
-      Stream.flattenChunks,
-      Stream.tap(tile =>
+      Stream.tap(chunk =>
         Effect.sync(() => {
-          grid[tile.y]?.[tile.x]?.set(baseUrl + tile.path)
+          Chunk.forEach(
+            chunk,
+            tile => grid[tile.y]?.[tile.x]?.set(baseUrl + tile.path),
+          )
         }),
       ),
       Stream.retry(Schedule.spaced("3 seconds")),
