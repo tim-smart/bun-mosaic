@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "run:bun": "bun run packages/http/main.bun.ts ./images ./watch",
-    "run:node": "node --loader=ts-node/esm packages/http/main.node.ts ./images ./watch",
+    "run:node": "NODE_OPTIONS='--no-warnings --loader ts-node/esm' node packages/http/main.node.ts ./images ./watch",
     "run:ui": "cd packages/ui && bun dev"
   },
   "devDependencies": {

@@ -31,8 +31,4 @@ const MainLive = HttpLive.pipe(
   Layer.use(Layer.succeed(WatchDirectory, process.argv[3])),
 )
 
-Effect.log("listening on http://localhost:3000").pipe(
-  Effect.zipRight(Layer.launch(MainLive)),
-  Effect.tapErrorCause(Effect.logError),
-  runMain,
-)
+Layer.launch(MainLive).pipe(Effect.tapErrorCause(Effect.logError), runMain)

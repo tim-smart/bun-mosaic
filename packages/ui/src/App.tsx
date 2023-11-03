@@ -51,15 +51,10 @@ function Grid({
 
 function GridCell({ src }: { readonly src: RxRef.RxRef<string | undefined> }) {
   const url = useRxRef(src)
-  return (
-    <>
-      <div
-        className="grid-cell"
-        style={{
-          backgroundImage: url ? `url(${url})` : undefined,
-        }}
-      ></div>
-    </>
+  return url ? (
+    <img className="grid-cell" src={url} alt="" />
+  ) : (
+    <div className="grid-cell" />
   )
 }
 
