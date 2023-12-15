@@ -4,8 +4,10 @@ import { Colors, RGB } from "@app/image/Colors"
 
 const make = Effect.gen(function* (_) {
   const colors = yield* _(Colors)
+  const sources = yield* _(DistanceSources)
+  console.log("sources", sources.length)
 
-  const closest = (sources: ReadonlyArray<RGB>, target: RGB, index = 0) => {
+  const closest = (target: RGB, index = 0) => {
     const order = Order.make((a: RGB, b: RGB) => {
       const distanceA = a.distance(target)
       const distanceB = b.distance(target)
@@ -20,13 +22,13 @@ const make = Effect.gen(function* (_) {
     readonly shard?: number
     readonly totalShards?: number
   }) =>
-    Stream.flatMap(DistanceSources, sources => {
+    Stream.suspend(() => {
       let count = 0
       return colors.colorGrid(options).pipe(
         Stream.map(
           target =>
             new IndexTile({
-              index: closest(sources, target.rgb, count++ % 20),
+              index: closest(target.rgb, count++ % 20),
               x: target.x,
               y: target.y,
             }),

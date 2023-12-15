@@ -36,14 +36,14 @@ importers:
         specifier: workspace:^
         version: link:../watcher
       '@effect/platform':
-        specifier: ^0.37.4
-        version: 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
-      '@effect/platform-bun':
-        specifier: ^0.25.5
-        version: 0.25.5(@effect/platform-node@0.37.5)(@effect/platform@0.37.4)(effect@2.0.0-next.60)
-      '@effect/platform-node':
         specifier: ^0.37.5
-        version: 0.37.5(@effect/platform@0.37.4)(effect@2.0.0-next.60)
+        version: 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+      '@effect/platform-bun':
+        specifier: ^0.25.6
+        version: 0.25.6(@effect/platform-node@0.37.6)(@effect/platform@0.37.5)(effect@2.0.0-next.60)
+      '@effect/platform-node':
+        specifier: ^0.37.6
+        version: 0.37.6(@effect/platform@0.37.5)(effect@2.0.0-next.60)
       '@effect/schema':
         specifier: ^0.53.3
         version: 0.53.3(effect@2.0.0-next.60)(fast-check@3.14.0)
@@ -57,14 +57,14 @@ importers:
   packages/image:
     dependencies:
       '@effect/platform':
-        specifier: ^0.37.4
-        version: 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
-      '@effect/platform-bun':
-        specifier: ^0.25.5
-        version: 0.25.5(@effect/platform-node@0.37.5)(@effect/platform@0.37.4)(effect@2.0.0-next.60)
-      '@effect/platform-node':
         specifier: ^0.37.5
-        version: 0.37.5(@effect/platform@0.37.4)(effect@2.0.0-next.60)
+        version: 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+      '@effect/platform-bun':
+        specifier: ^0.25.6
+        version: 0.25.6(@effect/platform-node@0.37.6)(@effect/platform@0.37.5)(effect@2.0.0-next.60)
+      '@effect/platform-node':
+        specifier: ^0.37.6
+        version: 0.37.6(@effect/platform@0.37.5)(effect@2.0.0-next.60)
       '@effect/schema':
         specifier: ^0.53.3
         version: 0.53.3(effect@2.0.0-next.60)(fast-check@3.14.0)
@@ -88,8 +88,8 @@ importers:
         specifier: ^0.18.1
         version: 0.18.1(effect@2.0.0-next.60)(react@18.2.0)
       '@effect/platform-browser':
-        specifier: ^0.23.4
-        version: 0.23.4(@effect/platform@0.37.4)(effect@2.0.0-next.60)
+        specifier: ^0.23.5
+        version: 0.23.5(@effect/platform@0.37.5)(effect@2.0.0-next.60)
       '@effect/schema':
         specifier: ^0.53.3
         version: 0.53.3(effect@2.0.0-next.60)(fast-check@3.14.0)
@@ -140,8 +140,8 @@ importers:
         specifier: workspace:^
         version: link:../image
       '@effect/platform':
-        specifier: ^0.37.4
-        version: 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+        specifier: ^0.37.5
+        version: 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
       effect:
         specifier: 2.0.0-next.60
         version: 2.0.0-next.60
@@ -402,42 +402,42 @@ packages:
       effect: 2.0.0-next.60
     dev: false
 
-  /@effect/platform-browser@0.23.4(@effect/platform@0.37.4)(effect@2.0.0-next.60):
-    resolution: {integrity: sha512-nCQiHonf1k3rX/DHKqc0uX0oA4sga56IH+mhVR6egbfPnh8tXHvq23CeCtTabVkAgwjyv4qfBukokaUXIFI1aw==}
+  /@effect/platform-browser@0.23.5(@effect/platform@0.37.5)(effect@2.0.0-next.60):
+    resolution: {integrity: sha512-7RjsCdW70RdHODQQzGNuoZVH9zJElAh6yC2+Vf+ofdMyLEaklBdxGPO9b9vYnCnypmBKOct/jQ7wroL18mBkig==}
     peerDependencies:
-      '@effect/platform': 0.37.4
+      '@effect/platform': 0.37.5
       effect: 2.0.0-next.60
     dependencies:
-      '@effect/platform': 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+      '@effect/platform': 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
       effect: 2.0.0-next.60
     dev: false
 
-  /@effect/platform-bun@0.25.5(@effect/platform-node@0.37.5)(@effect/platform@0.37.4)(effect@2.0.0-next.60):
-    resolution: {integrity: sha512-9DuhMxiWTUlCmsYQhIoqfTu5c1SLO/Lxfio42KBPNCrzKr0MFa56CtC48vs52yRTePkS6WkXyZGLupLawaVc1Q==}
+  /@effect/platform-bun@0.25.6(@effect/platform-node@0.37.6)(@effect/platform@0.37.5)(effect@2.0.0-next.60):
+    resolution: {integrity: sha512-Nl9eiiekxVMrUQYUYOmBtV5I6y8RS/3B8OlQPxQI72c99qq9TOTbR/KhF46q/TP7GbNKNQUasbSn2QTI5YsShg==}
     peerDependencies:
-      '@effect/platform': 0.37.4
-      '@effect/platform-node': 0.37.5
+      '@effect/platform': 0.37.5
+      '@effect/platform-node': 0.37.6
       effect: 2.0.0-next.60
     dependencies:
-      '@effect/platform': 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
-      '@effect/platform-node': 0.37.5(@effect/platform@0.37.4)(effect@2.0.0-next.60)
+      '@effect/platform': 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+      '@effect/platform-node': 0.37.6(@effect/platform@0.37.5)(effect@2.0.0-next.60)
       effect: 2.0.0-next.60
     dev: false
 
-  /@effect/platform-node@0.37.5(@effect/platform@0.37.4)(effect@2.0.0-next.60):
-    resolution: {integrity: sha512-gIcrwrcdoVS60JZf6r6LdgrvhKO0NCNGhVCi4bBpfvCdpz9wOxSk5Vx3LXuhAI8p3kDHiOCbFh3FBRwTJ2x12Q==}
+  /@effect/platform-node@0.37.6(@effect/platform@0.37.5)(effect@2.0.0-next.60):
+    resolution: {integrity: sha512-y58O0R5YfzMqscP3He9KetTi1StSofRvy0pa/j7iFEhVk9jaZbPBfehUtsjMbgPXPU3N1FelsYuii+lb3vd1+g==}
     peerDependencies:
-      '@effect/platform': 0.37.4
+      '@effect/platform': 0.37.5
       effect: 2.0.0-next.60
     dependencies:
-      '@effect/platform': 0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60)
+      '@effect/platform': 0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60)
       effect: 2.0.0-next.60
       mime: 3.0.0
       multipasta: 0.1.21
     dev: false
 
-  /@effect/platform@0.37.4(@effect/schema@0.53.3)(effect@2.0.0-next.60):
-    resolution: {integrity: sha512-thHM1w7UCKZYbOBY149FVPY8ffKtTSPqAg4ZfcSTNPFR9+Feh+XYSAl/Q+gtZJ4uR2BR3P6o3LslazSLcDZrxw==}
+  /@effect/platform@0.37.5(@effect/schema@0.53.3)(effect@2.0.0-next.60):
+    resolution: {integrity: sha512-f42YLv9TKm/9ApqaQqMLXjZtfsAO3YBKutC+WnArLFd67prqWYKtDE9PKjxN/RuhalKil72PEyVsT5vAnvNGZw==}
     peerDependencies:
       '@effect/schema': ^0.53.1
       effect: 2.0.0-next.60
