@@ -52,4 +52,4 @@ const make = (url: URL) =>
 
 // rx
 
-export const gridRx = Rx.family((url: URL) => Rx.scoped(() => make(url)))
+export const gridRx = Rx.family((url: URL) => Rx.make(make(url)))

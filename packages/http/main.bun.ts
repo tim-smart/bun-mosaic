@@ -22,13 +22,13 @@ const WorkerLive = ImageWorkerLive(
 )
 
 const MainLive = HttpLive.pipe(
-  Layer.use(Server),
-  Layer.use(WorkerLive),
-  Layer.use(KVS.layerFileSystem(`${process.argv[3]}/_cache`)),
-  Layer.use(BunContext.layer),
-  Layer.use(Worker.layerManager),
-  Layer.use(Layer.succeed(ImageDirectory, process.argv[2])),
-  Layer.use(Layer.succeed(WatchDirectory, process.argv[3])),
+  Layer.provide(Server),
+  Layer.provide(WorkerLive),
+  Layer.provide(KVS.layerFileSystem(`${process.argv[3]}/_cache`)),
+  Layer.provide(BunContext.layer),
+  Layer.provide(Worker.layerManager),
+  Layer.provide(Layer.succeed(ImageDirectory, process.argv[2])),
+  Layer.provide(Layer.succeed(WatchDirectory, process.argv[3])),
 )
 
 Layer.launch(MainLive).pipe(Effect.tapErrorCause(Effect.logError), runMain)

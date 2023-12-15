@@ -73,12 +73,9 @@ fn node_calculate_colors(mut cx: FunctionContext) -> JsResult<JsPromise> {
             let js_colors = JsArray::new(&mut cx, colors.len() as u32);
             for (i, color) in colors.iter().enumerate() {
                 let js_color = JsObject::new(&mut cx);
-                let r = cx.number(color.r);
-                let g = cx.number(color.g);
-                let b = cx.number(color.b);
-                js_color.set(&mut cx, "r", r).unwrap();
-                js_color.set(&mut cx, "g", g).unwrap();
-                js_color.set(&mut cx, "b", b).unwrap();
+                js_color.set(&mut cx, "r", cx.number(color.r)).unwrap();
+                js_color.set(&mut cx, "g", cx.number(color.g)).unwrap();
+                js_color.set(&mut cx, "b", cx.number(color.b)).unwrap();
                 js_colors.set(&mut cx, i as u32, js_color).unwrap();
             }
             Ok(js_colors)

@@ -1,3 +1,5 @@
+/// <reference lib="DOM" />
+
 import { RxRef, useRxRef, useRxSuspenseSuccess } from "@effect-rx/rx-react"
 import "./App.css"
 import { gridRx } from "./services/Grid"

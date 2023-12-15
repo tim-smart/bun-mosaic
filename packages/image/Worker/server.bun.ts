@@ -1,7 +1,7 @@
+import { RunnerLive } from "@app/image/Worker/runner"
 import { runMain } from "@effect/platform-bun/Runtime"
 import * as Runner from "@effect/platform-bun/WorkerRunner"
-import * as Server from "@effect/rpc-workers/Server"
-import { Effect } from "effect"
-import { router } from "./router"
+import { Layer } from "effect"
 
-Server.make(router).pipe(Effect.scoped, Effect.provide(Runner.layer), runMain)
+const MainLive = RunnerLive.pipe(Layer.provide(Runner.layerPlatform))
+runMain(Layer.launch(MainLive))

@@ -1,10 +1,10 @@
 import * as Sources from "@app/image/Sources"
 import { Watcher, WatcherLive } from "@app/watcher/Watcher"
-import { Path } from "@effect/platform"
 import * as Server from "@effect/platform/Http/Server"
 import * as Http from "@effect/platform/HttpServer"
+import * as Path from "@effect/platform/Path"
 import { Schema } from "@effect/schema"
-import { Chunk, Effect, Layer, Stream } from "effect"
+import { Effect, Layer, Stream } from "effect"
 
 const encodeTile = Schema.compose(
   Schema.ParseJson,
@@ -44,7 +44,7 @@ const serveImage = Effect.flatMap(
   ([{ image }, directory]) => Http.response.file(`${directory}/${image}`),
 )
 
-const serve = Http.router.empty.pipe(
+export const HttpLive = Http.router.empty.pipe(
   Http.router.get("/ping", Effect.succeed(Http.response.text("pong"))),
   Http.router.get("/stream", streamHandler),
   Http.router.get("/image/:image", serveImage),
@@ -56,6 +56,5 @@ const serve = Http.router.empty.pipe(
   Effect.map(Http.response.setHeader("Access-Control-Allow-Origin", "*")),
 
   Server.serve(),
+  Layer.provide(WatcherLive)
 )
-
-export const HttpLive = Layer.scopedDiscard(serve).pipe(Layer.use(WatcherLive))

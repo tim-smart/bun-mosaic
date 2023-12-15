@@ -13,14 +13,22 @@
       "script": "run:bun",
       "problemMatcher": [],
       "label": "npm: run:bun",
-      "detail": "bun run packages/http/main.bun.ts ./images ./watch"
+      "detail": "bun run packages/http/main.bun.ts ./images ./watch",
+      "presentation": {
+        "panel": "shared",
+        "group": "run"
+      }
     },
     {
       "type": "npm",
       "script": "run:node",
       "problemMatcher": [],
       "label": "npm: run:node",
-      "detail": "node --loader=ts-node/esm packages/http/main.node.ts ./images ./watch"
+      "detail": "node --loader=ts-node/esm packages/http/main.node.ts ./images ./watch",
+      "presentation": {
+        "panel": "shared",
+        "group": "run"
+      }
     },
     {
       "label": "run all",

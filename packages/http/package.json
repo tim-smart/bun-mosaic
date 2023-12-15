@@ -9,12 +9,11 @@
   "dependencies": {
     "@app/image": "workspace:^",
     "@app/watcher": "workspace:^",
-    "@effect/platform": "^0.27.2",
-    "@effect/platform-bun": "^0.16.2",
-    "@effect/platform-node": "^0.28.2",
-    "@effect/rpc-workers": "^0.17.1",
-    "@effect/schema": "^0.47.1",
-    "effect": "2.0.0-next.54",
-    "ts-node": "^10.9.1"
+    "@effect/platform": "^0.37.4",
+    "@effect/platform-bun": "^0.25.5",
+    "@effect/platform-node": "^0.37.5",
+    "@effect/schema": "^0.53.3",
+    "effect": "2.0.0-next.60",
+    "ts-node": "^10.9.2"
   }
 }

@@ -1,8 +1,10 @@
 import * as Worker from "@app/image/Worker/schema"
 import { concurrency } from "@app/image/utils"
-import { FileSystem, KeyValueStore, Path } from "@effect/platform"
+import * as FileSystem from "@effect/platform/FileSystem"
+import * as Path from "@effect/platform/Path"
+import * as KeyValueStore from "@effect/platform/KeyValueStore"
 import { Schema } from "@effect/schema"
-import { Chunk, Context, Effect, Layer, Stream } from "effect"
+import { Chunk, Console, Context, Effect, Layer, Stream } from "effect"
 import * as Crypto from "node:crypto"
 
 const make = (directory: string) =>
@@ -18,24 +20,23 @@ const make = (directory: string) =>
 
     yield* _(Effect.log("calculating colors"))
     const colors = yield* _(
-      Effect.gen(function* (_) {
-        const worker = yield* _(Worker.client([], 10))
-        return yield* _(
-          Effect.forEach(
-            images,
-            image =>
-              worker
-                .getColor(image)
-                .pipe(
-                  Effect.zipLeft(Effect.sync(() => process.stdout.write("."))),
-                ),
-            { concurrency: "unbounded" },
-          ),
-        )
-      }).pipe(Effect.scoped),
+      Worker.pool([], 10),
+      Effect.flatMap(worker =>
+        Effect.forEach(
+          images,
+          image =>
+            worker
+              .executeEffect(new Worker.GetColor({ path: image }))
+              .pipe(
+                Effect.zipLeft(Effect.sync(() => process.stdout.write("."))),
+              ),
+          { concurrency: "unbounded" },
+        ),
+      ),
+      Effect.scoped,
     )
 
-    const worker = yield* _(Worker.client(colors, 2))
+    const worker = yield* _(Worker.pool(colors, 2))
 
     yield* _(Effect.log("sources ready"))
 
@@ -61,17 +62,23 @@ const make = (directory: string) =>
         }
 
         const tiles = yield* _(
-          worker.getTiles({ path, columns, shard: row, totalShards: columns }),
-          Effect.map(
-            Chunk.map(
-              tile =>
-                new ImageTile({
-                  path: images[tile.index],
-                  x: tile.x,
-                  y: tile.y,
-                }),
-            ),
+          worker.execute(
+            new Worker.GetTiles({
+              path,
+              columns,
+              shard: row,
+              totalShards: columns,
+            }),
           ),
+          Stream.map(
+            tile =>
+              new ImageTile({
+                path: images[tile.index],
+                x: tile.x,
+                y: tile.y,
+              }),
+          ),
+          Stream.runCollect,
         )
         yield* _(cache.set(key, tiles))
         return tiles
@@ -85,7 +92,9 @@ const make = (directory: string) =>
       readonly columns: number
     }) =>
       Stream.range(0, columns - 1).pipe(
-        Stream.mapEffect(row => getTiles(path, columns, row), { concurrency }),
+        Stream.mapEffect(row => getTiles(path, columns, row), {
+          concurrency: "unbounded",
+        }),
         Stream.flattenChunks,
       )
 
@@ -124,5 +133,5 @@ export const Sources = Context.Tag<
 export const SourcesLive = ImageDirectory.pipe(
   Effect.flatMap(make),
   Layer.scoped(Sources),
-  Layer.use(Cache.layer),
+  Layer.provide(Cache.layer),
 )

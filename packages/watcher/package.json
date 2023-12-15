@@ -9,7 +9,7 @@
   "scripts": {},
   "dependencies": {
     "@app/image": "workspace:^",
-    "@effect/platform": "^0.27.2",
-    "effect": "2.0.0-next.54"
+    "@effect/platform": "^0.37.4",
+    "effect": "2.0.0-next.60"
   }
 }

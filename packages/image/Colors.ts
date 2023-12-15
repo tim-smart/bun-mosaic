@@ -1,9 +1,8 @@
-import { Context, Effect, Layer, Order, ReadonlyArray, Stream } from "effect"
+import { Context, Effect, Layer, Stream } from "effect"
 import Jimp from "jimp"
 import { Schema } from "@effect/schema"
 
-export class ColorError extends Schema.Class<ColorError>()({
-  _tag: Schema.literal("ColorError"),
+export class ColorError extends Schema.TaggedError<ColorError>()("ColorError", {
   message: Schema.string,
 }) {}
 
@@ -11,11 +10,7 @@ const make = Effect.gen(function* (_) {
   const open = (path: string) =>
     Effect.tryPromise({
       try: () => Jimp.read(path) as Promise<Jimp>,
-      catch: error =>
-        new ColorError({
-          _tag: "ColorError",
-          message: `${error}`,
-        }),
+      catch: error => new ColorError({ message: `${error}` }),
     })
 
   const colorFromJimp = (
@@ -59,7 +54,6 @@ const make = Effect.gen(function* (_) {
     path,
     columns,
     rows = columns,
-    ratio = 1,
     shard = 0,
     totalShards = 1,
   }: {
@@ -68,7 +62,6 @@ const make = Effect.gen(function* (_) {
     readonly rows?: number
     readonly shard?: number
     readonly totalShards?: number
-    readonly ratio?: number
   }) =>
     Effect.gen(function* (_) {
       const image = yield* _(open(path))

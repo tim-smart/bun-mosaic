@@ -1,16 +1,16 @@
-import * as Fs from "node:fs"
+import { ImageTile, Sources, SourcesLive } from "@app/image/Sources"
+import * as FileSystem from "@effect/platform/FileSystem"
+import * as Path from "@effect/platform/Path"
 import {
   Chunk,
   Context,
   Effect,
   Layer,
   PubSub,
-  Schedule,
   Scope,
-  Stream,
+  Stream
 } from "effect"
-import { ImageTile, Sources, SourcesLive } from "@app/image/Sources"
-import { FileSystem, Path } from "@effect/platform"
+import * as Fs from "node:fs"
 
 const make = (directory: string) =>
   Effect.gen(function* (_) {
@@ -80,4 +80,5 @@ export const Watcher = Context.Tag<
 export const WatcherLive = WatchDirectory.pipe(
   Effect.flatMap(make),
   Layer.scoped(Watcher),
-).pipe(Layer.use(SourcesLive))
+  Layer.provide(SourcesLive)
+)
